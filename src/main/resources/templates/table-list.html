@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table List</title>
     <link rel="stylesheet" href="/css/styles.css">
+
+    <script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
+    
+    <script th:src="@{/jquery/handsontable.full.min.js}"></script>
+    <link th:href="@{/css/handsontable.full.min.css}" rel="stylesheet" />
+
 </head>
 <body>
     <header class="header">
@@ -16,14 +22,14 @@
         <section class="navigation">
             <h2>Tables</h2>
 
-            <form th:action="@{/}" method="get">
-                <input type="text" id="btnSearch" name="search" th:value="${search}" placeholder="Search by table name or logical name">
-                <button type="submit">Search</button>
-                <button type="button" onclick="clearSearch()">Clear</button>
-            </form>
+            
+            <input type="text" id="txtSearch" name="search" th:value="${search}" placeholder="Search by table name or logical name">
+            <button id="btnSearch" type="submit">Search</button>
+            <button id="btnClear" type="button">Clear</button>
+            
 
 
-            <table class="table-list">
+            <!-- <table class="table-list">
                 <thead>
                     <tr>
                         <th>Table Name</th>
@@ -36,7 +42,9 @@
                         <td><a th:href="@{/table-details(tableName=${table.tableName})}" th:text="${table.logicalName}"></a></td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
+
+            <div id="tableList"></div>
 
         </section>
 
@@ -47,9 +55,63 @@
     </footer>
 
     <script>
-        function clearSearch() {
-            document.getElementById("btnSearch").value = "";
+        let baseUrl = "/api/v1";
+        // let baseUrl = "localhost:8080/api/v1";
+
+
+        function jsonToMatrix(jsonData) {
+            const matrix = [];
+            jsonData.forEach(item => {
+                matrix.push([item.tableName, item.logicalName]);
+            });
+            return matrix;
         }
+
+
+
+        $(document).ready(function() {
+            $("#btnClear").click(function() {
+
+                $('#txtSearch').val('');
+                $('#btnSearch').click();
+            });
+            
+
+            const container = document.querySelector('#tableList');
+
+            const hot = new Handsontable(container, {
+                colHeaders: ['Physical Name', 'Logical Name'],
+                readOnly: true,
+                data: [],
+                rowHeaders: true,
+                // colHeaders: true,
+                height: 'auto',
+                autoWrapRow: true,
+                autoWrapCol: true,
+                licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
+            });
+
+            $('#btnSearch').click(function () {
+                $.ajax({
+                    url: baseUrl + '/tables?search=' +  $('#txtSearch').val(),
+                    dataType: 'json',
+                    type: 'GET',
+                    success: function (res) {
+                        
+                        if(res.length == 0){
+                            alert('No data found');
+                            return;
+                        }
+                        let matrixList = jsonToMatrix(res);
+                        hot.loadData(matrixList);
+                    }
+                });
+            });
+
+            $('#btnSearch').click();
+        });
+
+
     </script>
 
 </body>

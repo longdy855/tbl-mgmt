@@ -21,22 +21,12 @@ public class TableController {
     }
 
     @GetMapping("/")
-    public String tableList(@RequestParam(value = "search", required = false) String search, Model model) {
-    // public String tableList(Model model) {
-        if (null == search) {
-            search = "";
-        }
-        List<TableInfo> tables = tableService.getAllTables(search);
-        model.addAttribute("tables", tables);
-        model.addAttribute("search", search);
+    public String tableList() {
         return "table-list";    
     }
 
     @GetMapping("/table-details")
-    public String tableDetails(@RequestParam String tableName, Model model) {
-        List<ColumnInfo> columns = tableService.getTableDetails(tableName);
-        model.addAttribute("columns", columns);
-        model.addAttribute("tableName", tableName);
+    public String tableDetails() {
         return "table-details";
     }
 }

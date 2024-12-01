@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
+    
     <script th:src="@{/jquery/handsontable.full.min.js}"></script>
-
-    <link href="/css/handsontable.full.min.css" rel="stylesheet" />
+    <link th:href="@{/css/handsontable.full.min.css}" rel="stylesheet" />
 
 
 </head>
@@ -26,7 +26,7 @@
             <h2 th:text="${logicalName}">Logical Name</h2>
             <input type="button" id="myButton" value="Add Column"/><br>
 
-            <table class="table-list">
+            <!-- <table class="table-list">
                 <thead>
                     <tr>
                         <th>Logical Name</th>
@@ -45,9 +45,9 @@
                         <td th:text="${column.isPrimaryKey}"></td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
 
-            <div id="example"></div>
+            <div id="example1"></div>
 
         </section>
     </main>
