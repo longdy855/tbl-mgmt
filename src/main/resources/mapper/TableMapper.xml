@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.home.tblmgmt.mapper.TableMapper">
+
+    <select id="getAllTables" resultType="TableInfo">
+        WITH A AS (
+            SELECT
+                OBJ_DESCRIPTION(oid),
+                relname
+            FROM
+                pg_class
+            WHERE
+                relkind = 'r' ),
+        B AS (
+            SELECT
+                *
+            FROM
+                INFORMATION_SCHEMA.TABLES
+            WHERE
+                TABLE_SCHEMA = #{schema}),
+        C AS (
+            SELECT
+                DISTINCT UPPER(B.table_name) tableName ,
+                A.OBJ_DESCRIPTION logicalName
+            FROM
+                A
+            JOIN B ON
+                A.relname = B.table_name )
+        SELECT
+        --	ROW_NUMBER () OVER() AS ROW_NO,
+            *
+        FROM
+            C
+        WHERE
+        	'' = COALESCE(#{search}, '')
+        	OR C.tableName ILIKE '%' || TRIM(#{search}) || '%'
+            OR C.logicalName ILIKE '%' || TRIM(#{search}) || '%'
+        ORDER BY
+            tableName; 
+    </select>
+
+    <select id="getTableDetails" resultType="ColumnInfo">
+        WITH tableLayout AS (                                                                                       
+            SELECT                                                                                                  
+                ROW_NUMBER () OVER(ORDER BY c.dtd_identifier::int) roNo,                                        
+                TRIM(UPPER(c.column_name)) PhysicalName,                                                          
+                TRIM(b.description) LogicalName,                                                                  
+                TRIM(CASE                                                                                         
+                    WHEN c.udt_name = 'varchar'                                                                   
+                        THEN UPPER(c.udt_name) || '(' || c.character_maximum_length || ')'                        
+                    WHEN c.udt_name IN ('text', 'timestamp')                                                      
+                        THEN UPPER(c.udt_name)                                                                    
+                    WHEN c.udt_name = 'numeric'                                                                   
+                        THEN UPPER(c.udt_name) || '(' || c.numeric_precision || ',' || c.numeric_scale || ')'     
+                    ELSE ''                                                                                       
+                END) DataTypes,                                                                                    
+                CASE                                                                                              
+                    WHEN e.constraint_type = 'PRIMARY KEY' THEN 'Y'                                               
+                    ELSE 'N'                                                                                      
+                    END PrimaryKeyYN,                                                                                 
+        TRIM(LOWER(SUBSTR(b.description, 1, 1)) || SUBSTR(b.description, 2)) camelCase,                                
+        CASE                                                                                                           
+            WHEN c.udt_name = 'varchar' THEN 'string'                                                                  
+        WHEN c.udt_name = 'numeric' THEN 'number'                                                                  
+            ELSE c.udt_name                                                                                            
+        END jsonType,                                                                                                  
+        '""'||LOWER(SUBSTR(b.description, 1, 1)) || TRIM(SUBSTR(b.description, 2)) ||'"": '                            
+        || CASE                                                                                                    
+            WHEN c.udt_name ='varchar'                                                                             
+                THEN '""""'                                                                                         
+            WHEN c.udt_name = 'numeric' THEN '0'                                                                   
+                ELSE c.udt_name                                                                                        
+        END || '' || ',' body_request                                                                                  
+                FROM                                                                                               
+                pg_catalog.pg_statio_all_tables a                                                                 
+                INNER JOIN pg_catalog.pg_description b                                                             
+                    ON(b.objoid = a.relid)                                                                         
+                INNER JOIN information_schema.columns c                                                            
+                    on (b.objsubid   = c.ordinal_position                                                          
+                        and c.table_schema = a.schemaname                                                          
+                        and c.table_name   = a.relname)                                                            
+                LEFT JOIN information_schema.key_column_usage d                                                    
+                    ON(c.table_schema = d.table_schema                                                             
+                        and c.table_name  = d.table_name                                                           
+                        and c.column_name = d.column_name)                                                         
+                LEFT JOIN information_schema.table_constraints e                                                   
+                    ON (d.constraint_name = e.constraint_name                                                      
+                        and d.constraint_schema = e.constraint_schema                                              
+                        and d.constraint_name = e.constraint_name)                                                 
+                WHERE                                                                                              
+                    c.table_schema = 'tbl_mgmt'                                                    
+                    AND c.table_name = 'roles'                                             
+                ORDER BY                                                                                           
+                    c.table_schema,c.table_name,c.dtd_identifier::int                                                 
+        ), codeValue as (                                                                                           
+            SELECT                                                                                                  
+                a.stnd_cd_dmn_nm,                                                                                   
+                STRING_AGG(c.stnd_cd_val || ':' ||  c.stnd_cd_val_desc, CHR(10)) codeDesc                  
+            FROM                                                                                                    
+                copco_stdcd_m a                                                                                
+                    JOIN copco_stdcd_l b ON                                                                          
+                        a.stnd_cd_dmn_nm = b.stnd_cd_dmn_nm                                                                   
+                left join copco_stdla_l c on                                                                     
+                    b.stnd_cd_dmn_nm = c.stnd_cd_dmn_nm                                                                 
+                    and b.stnd_cd_val = c.stnd_cd_val                                                                   
+                    and c.lang_cd = 'En'                                                                                
+            WHERE                                                                                                   
+            b.bzwk_com_stcd = '01'                                                                                
+            AND a.BZWK_COM_STCD = '01'                                                                            
+            GROUP BY a.stnd_cd_dmn_nm,                                                                              
+            a.stnd_cd_kor_dmn_nm                                                                                  
+        )                                                                                                           
+        SELECT                                                                                                      
+            a.roNo,                                                                                               
+            a.PhysicalName columnPhysicalName,                                                                                         
+            a.LogicalName columnLogicalName,                                                                                          
+            a.DataTypes dataType,                                                                                             
+            a.PrimaryKeyYN isPrimaryKey,                                                                                         
+            b.codeDesc,                                                                                  
+            a.camelCase,                                                                                            
+            a.jsonType,                                                                                             
+            a.body_request                                                                                          
+            FROM tableLayout a                                                                                      
+            LEFT JOIN codeValue b                                                                                   
+            ON a.LogicalName = b.stnd_cd_dmn_nm                                                                     
+        ORDER BY a.roNo;       
+    </select>
+
+    <update id="renameColumn">
+        ALTER TABLE #{schema}.#{table} RENAME COLUMN #{oldName} TO #{newName};
+    </update>
+
+    <update id="removeColumn">
+        ALTER TABLE #{schema}.#{table} DROP COLUMN #{column};
+    </update>
+
+    <update id="modifyColumnDataType">
+        ALTER TABLE #{schema}.#{table} ALTER COLUMN #{column} TYPE #{dataType};
+    </update>
+</mapper>

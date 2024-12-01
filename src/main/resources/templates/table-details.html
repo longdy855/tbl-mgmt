@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table List</title>
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/jquery/handsontable.full.min.js}"></script>
+
+    <link href="/css/handsontable.full.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+    <header class="header">
+        <h1>Database Table Manager</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="navigation">
+
+            <h2 th:text="${tableName}">Table Name</h2>
+            <h2 th:text="${logicalName}">Logical Name</h2>
+            <input type="button" id="myButton" value="Add Column"/><br>
+
+            <table class="table-list">
+                <thead>
+                    <tr>
+                        <th>Logical Name</th>
+                        <th>Physical Name</th>
+                        <th>Data Type</th>
+                        <th>Nullable</th>
+                        <th>Primary Key</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="column : ${columns}">
+                        <td th:text="${column.columnLogicalName}"></td>
+                        <td th:text="${column.columnPhysicalName}"></td>
+                        <td th:text="${column.dataType}"></td>
+                        <td th:text="${column.isNullable}"></td>
+                        <td th:text="${column.isPrimaryKey}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="example"></div>
+
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Database Management System</p>
+    </footer>
+    <script>
+
+        $(document).ready(function() {
+            $("#myButton").click(function() {
+                alert("hello");
+            });
+
+
+            const container = document.querySelector('#example');
+
+            const hot = new Handsontable(container, {
+            data: [
+                ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
+                ['2019', 10, 11, 12, 13],
+                ['2020', 20, 11, 14, 13],
+                ['2021', 30, 15, 12, 13]
+            ],
+            rowHeaders: true,
+            colHeaders: true,
+            height: 'auto',
+            autoWrapRow: true,
+            autoWrapCol: true,
+            licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
+            });
+
+
+
+        });
+    </script>
+</body>
+</html>
+
+
+<!-- https://www.jqueryscript.net/table/Excel-like-Data-Grid-Editor-For-jQuery-handsontable.html -->
