@@ -10,5 +10,5 @@ public class ColumnInfo {
     private String columnLogicalName;
     private String dataType;
     private boolean isNullable;
-    private String isPrimaryKey;
+    private boolean isPrimaryKey;
 }

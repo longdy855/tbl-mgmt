@@ -25,8 +25,16 @@ public class TableController {
         return "table-list";    
     }
 
+    // @GetMapping("/table-details")
+    // public String tableDetails() {
+    //     return "table-details";
+    // }
+
+
     @GetMapping("/table-details")
-    public String tableDetails() {
+    public String tableDetails(@RequestParam String tableName, @RequestParam String logicalName,Model model) {
+        model.addAttribute("tableName", tableName);
+        model.addAttribute("logicalName", logicalName);
         return "table-details";
     }
 }

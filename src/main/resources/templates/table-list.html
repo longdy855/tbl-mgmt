@@ -77,12 +77,53 @@
             });
             
 
+            var actionsRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+                // // var escaped = Handsontable.helper.stringify(value);
+                // // if (escaped.indexOf('http') === 0) {
+                //     var $anchor = $('<a text="View Details">');
+                //     $anchor.attr('href', '/table-details?tableName=' + value);
+                //     // $anchor.on('mousedown', function (event) {
+                //     //     event.preventDefault(); //prevent selection quirk
+                //     // });
+                //     $(td).empty().append($anchor); //empty is needed because you are rendering to an existing cell
+                // // }
+                // // else {
+                // //     Handsontable.TextCell.renderer.apply(this, arguments); //render as text
+                // // }
+                // return td;
+
+                // escaped = strip_tags(escaped, '<em><b><a>'); 
+
+                // var $anchor = $('<input type="button" value="View Details"/>');
+                // $anchor.attr('href', '/table-details?tableName=' + value);
+
+                // $(td).empty().append($anchor);
+                // return td;
+
+                
+                var $anchor = $('<a>View Details</a>');
+                $anchor.attr('href', '#' + value);
+                // $anchor.attr('href', '/table-details?tableName=' + value);
+                $anchor.attr('class', 'view-details-link');
+
+                $(td).empty().append($anchor);
+                return td;
+
+            };
+
             const container = document.querySelector('#tableList');
 
             const hot = new Handsontable(container, {
-                colHeaders: ['Physical Name', 'Logical Name'],
+                colHeaders: ['Physical Name', 'Logical Name', 'Actions'],
                 readOnly: true,
                 data: [],
+
+                columns: [
+                    {data: "tableName"},
+                    {data: "logicalName"},
+                    {data: "tableName", type: {renderer: actionsRenderer}}
+                ],
+
                 rowHeaders: true,
                 // colHeaders: true,
                 height: 'auto',
@@ -102,13 +143,51 @@
                             alert('No data found');
                             return;
                         }
-                        let matrixList = jsonToMatrix(res);
-                        hot.loadData(matrixList);
+                        // let matrixList = jsonToMatrix(res);
+                        hot.loadData(res);
+                        // hot.loadData(matrixList);
                     }
                 });
             });
 
             $('#btnSearch').click();
+        
+            // signle click and get data
+            hot.addHook('afterSelection', function(row, column) {
+
+                if(column == 2){
+
+                    // console.log(selectedRowData);
+                    window.location.href = '/table-details?tableName=' + hot.getDataAtRow(row)[0] + '&logicalName=' + hot.getDataAtRow(row)[1];
+                }
+
+                // const selectedRowData = hot.getDataAtRow(row);
+                // console.log(selectedRowData);
+            });
+        
+            // hot.addHook('afterCellMouseDown', function(event, coords) {
+            //     if (event.detail === 2) { // Double-click detected
+            //         const row = coords.row;
+            //         const col = coords.col;
+            //         const selectedData = hot.getDataAtCell(row, col);
+
+            //         // Do something with the selected data
+            //         console.log("Double-clicked cell:", selectedData);
+            //         // For example, you might open a modal, trigger a function, or update other parts of your application.
+            //     }
+            // });
+        
+            // $('#tableList .view-details-link').click(function(event) {
+            //     event.preventDefault(); // Prevent default behavior
+                
+            //     // Get the href attribute of the clicked link
+            //     const href = $(this).attr('href');
+
+            //     // Do something with the href, like:
+            //     // console.log('Clicked link:', href);
+            //     // You can make an AJAX request, display a modal, or redirect the user to a different URL based on the href.
+            // });
+
         });
 
 

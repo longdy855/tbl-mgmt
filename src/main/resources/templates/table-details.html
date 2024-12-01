@@ -22,9 +22,9 @@
 
         <section class="navigation">
 
-            <h2 th:text="${tableName}">Table Name</h2>
-            <h2 th:text="${logicalName}">Logical Name</h2>
-            <input type="button" id="myButton" value="Add Column"/><br>
+            <h3 id="h3TableName" th:text="${tableName}">Table Name</h3>
+            <h3 th:text="${logicalName}">Logical Name</h3>
+            <!-- <input type="button" id="myButton" value="Add Column"/><br> -->
 
             <!-- <table class="table-list">
                 <thead>
@@ -47,7 +47,7 @@
                 </tbody>
             </table> -->
 
-            <div id="example1"></div>
+            <div id="tblDetail"></div>
 
         </section>
     </main>
@@ -58,29 +58,53 @@
     <script>
 
         $(document).ready(function() {
-            $("#myButton").click(function() {
-                alert("hello");
-            });
+            let baseUrl = "/api/v1";
 
 
-            const container = document.querySelector('#example');
+            function checkboxRenderer(instance, td, row, col, prop, value, cellProperties) {
+                Handsontable.renderers.TextRenderer.apply(this, arguments);
+                td.innerHTML = '<input type="checkbox" ' + (value ? 'checked' : '') + ' />';
+            }
+
+
+            const container = document.querySelector('#tblDetail');
 
             const hot = new Handsontable(container, {
-            data: [
-                ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
-                ['2019', 10, 11, 12, 13],
-                ['2020', 20, 11, 14, 13],
-                ['2021', 30, 15, 12, 13]
-            ],
-            rowHeaders: true,
-            colHeaders: true,
-            height: 'auto',
-            autoWrapRow: true,
-            autoWrapCol: true,
-            licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
+                colHeaders: ['Physical Name', 'Logical Name', 'Data Type', 'Primary Key'],
+                // readOnly: true,
+                data: [],
+
+                columns: [
+                    {data: "columnPhysicalName"},
+                    {data: "columnLogicalName"},
+                    {data: "dataType"},
+                    {data: "primaryKey", type: 'checkbox', renderer: checkboxRenderer }
+                ],
+
+                rowHeaders: true,
+                // colHeaders: true,
+                height: 'auto',
+                autoWrapRow: true,
+                autoWrapCol: true,
+                minSpareRows: 1,
+                licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
             });
 
-
+            $.ajax({
+                url: baseUrl + '/table-detail/' +  $('#h3TableName').text(),
+                dataType: 'json',
+                type: 'GET',
+                success: function (res) {
+                    
+                    if(res.length == 0){
+                        alert('No data found');
+                        return;
+                    }
+                    // let matrixList = jsonToMatrix(res);
+                    hot.loadData(res);
+                    // hot.loadData(matrixList);
+                }
+            });
 
         });
     </script>
