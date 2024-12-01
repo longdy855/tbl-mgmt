@@ -54,7 +54,7 @@
                         THEN UPPER(c.udt_name)                                                                    
                     WHEN c.udt_name = 'numeric'                                                                   
                         THEN UPPER(c.udt_name) || '(' || c.numeric_precision || ',' || c.numeric_scale || ')'     
-                    ELSE ''                                                                                       
+                    ELSE UPPER(c.udt_name)                                                                                       
                 END) DataTypes,                                                                                    
                 CASE                                                                                              
                     WHEN e.constraint_type = 'PRIMARY KEY' THEN TRUE                                               
