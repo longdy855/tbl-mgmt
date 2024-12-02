@@ -1,4 +1,4 @@
-package com.home.tblmgmt.controller;
+package com.home.tblmgmt.controller.view;
 
 import java.util.List;
 

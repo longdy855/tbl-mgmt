@@ -1,4 +1,4 @@
-package com.home.tblmgmt.restcontroller;
+package com.home.tblmgmt.controller.rest;
 
 import java.util.List;
 
