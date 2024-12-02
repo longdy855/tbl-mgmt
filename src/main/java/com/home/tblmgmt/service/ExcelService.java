@@ -67,7 +67,7 @@ public class ExcelService {
                 row.createCell(1).setCellValue(columnInfo.getColumnPhysicalName());
                 row.createCell(2).setCellValue(columnInfo.getColumnLogicalName());
                 row.createCell(3).setCellValue(columnInfo.getDataType());
-                row.createCell(4).setCellValue(columnInfo.isNullable());
+                // row.createCell(4).setCellValue(columnInfo.isNullable());
                 row.createCell(5).setCellValue(columnInfo.isPrimaryKey());
             }
 

@@ -39,4 +39,6 @@ public class TableService {
     public void modifyColumnDataType(String table, String column, String dataType, int length) {
         tableMapper.modifyColumnDataType(appConfig.getSchemaName(), table, column, dataType, length);
     }
+
+    
 }

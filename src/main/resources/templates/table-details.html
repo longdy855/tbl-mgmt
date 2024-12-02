@@ -21,7 +21,7 @@
     <main class="container">
 
         <section class="navigation">
-
+            <a th:href="@{/}">◀ Table List</a>
             <h3 id="h3TableName" th:text="${tableName}">Table Name</h3>
             <h3 th:text="${logicalName}">Logical Name</h3>
             <!-- <input type="button" id="myButton" value="Add Column"/><br> -->
@@ -46,8 +46,7 @@
                     </tr>
                 </tbody>
             </table> -->
-
-            <div id="tblDetail"></div>
+            <div id="tblDetail" style="width: 1000px;"></div>
             <input type="button" id="btnSave" value="Save"/>
             <input type="button" id="btnDownloadExcel" value="Download Excel"/>
 
@@ -100,7 +99,7 @@
             const container = document.querySelector('#tblDetail');
 
             const hot = new Handsontable(container, {
-                colHeaders: ['Physical Name', 'Logical Name', 'Data Type', 'Primary Key'],
+                colHeaders: ['Physical Name', 'Logical Name', 'Data Type', 'Primary Key', 'Code Description'],
                 // readOnly: true,
                 data: [],
 
@@ -108,9 +107,11 @@
                     {data: "columnPhysicalName"},
                     {data: "columnLogicalName"},
                     {data: "dataType"},
-                    {data: "primaryKey", type: 'checkbox', renderer: checkboxRenderer }
+                    {data: "primaryKey", type: 'checkbox', renderer: checkboxRenderer },
+                    {data: "codeDesc" }
                 ],
                 height: 500,
+                width: 800,
                 rowHeaders: true,
                 // colHeaders: true,
                 // height: 'auto',
@@ -192,7 +193,9 @@
             }
 
             $('#btnSave').click(function() {
-                sendDataToServer(matrixToJson(hot.getData()));
+                let jsonData = matrixToJson(hot.getData());
+                console.log(jsonData);
+                sendDataToServer(jsonData);
             });
 
             function downloadExcel(tableName) {
