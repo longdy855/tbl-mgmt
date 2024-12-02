@@ -116,17 +116,17 @@
             const hot = new Handsontable(container, {
                 colHeaders: ['Physical Name', 'Logical Name', 'Actions'],
                 readOnly: true,
+                height: 500,
                 data: [],
-
+                filters: true,
+                // dropdownMenu: true,
                 columns: [
                     {data: "tableName"},
                     {data: "logicalName"},
-                    {data: "tableName", type: {renderer: actionsRenderer}}
+                    {data: "tableName", type: {renderer: actionsRenderer}, filterable: false}
                 ],
-
-                rowHeaders: true,
-                // colHeaders: true,
-                height: 'auto',
+                dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+                rowHeaders: true, // Enable row headers
                 autoWrapRow: true,
                 autoWrapCol: true,
                 licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
