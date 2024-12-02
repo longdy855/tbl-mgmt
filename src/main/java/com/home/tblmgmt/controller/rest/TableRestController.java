@@ -41,19 +41,13 @@ public class TableRestController {
        return tableService.getTableDetails(name);
     }
 
-    // @PostMapping
-    // public void addUser(@RequestBody User user) {
-    //     userService.addUser(user);
-    // }
+    @PostMapping("/table-detail")
+    public ResponseEntity<String> saveTableDetail(@RequestBody List<ColumnInfo> columnInfo) {
+        columnInfo.forEach(System.out::println);
 
-    // @PutMapping("/{id}")
-    // public void updateUser(@PathVariable Long id, @RequestBody User user) {
-    //     userService.updateUser(id, user);
-    // }
+        // Return a response to the client
+        return ResponseEntity.ok("Data received successfully!");
+    }
 
-
-    // @DeleteMapping("/{id}")
-    // public void deleteUser(@PathVariable Long id) {
-    //     userService.deleteUser(id);
-    // }
+    
 }

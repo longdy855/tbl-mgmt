@@ -171,10 +171,28 @@
                 }
             });
 
+            function sendDataToServer(jsonData) {
+                // Example list of JSON objects
+                
 
+                $.ajax({
+                    url: baseUrl + '/table-detail', // Replace with your REST endpoint
+                    method: 'POST',
+                    contentType: 'application/json', // Inform server of JSON content
+                    data: JSON.stringify(jsonData), // Convert JavaScript object to JSON string
+                    success: function (response) {
+                        console.log('Server response:', response);
+                        alert('Data sent successfully!');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error sending data:', error);
+                        alert('Failed to send data. Please try again.');
+                    }
+                });
+            }
 
             $('#btnSave').click(function() {
-                console.log(matrixToJson(hot.getData()));
+                sendDataToServer(matrixToJson(hot.getData()));
             });
 
             function downloadExcel(tableName) {
