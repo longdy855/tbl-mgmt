@@ -44,7 +44,7 @@
     <select id="getTableDetails" resultType="ColumnInfo">
         WITH tableLayout AS (                                                                                       
             SELECT                                                                                                  
-                ROW_NUMBER () OVER(ORDER BY c.dtd_identifier::int) roNo,                                        
+                ROW_NUMBER () OVER(ORDER BY c.dtd_identifier::int) rowNo,                                        
                 TRIM(UPPER(c.column_name)) PhysicalName,                                                          
                 TRIM(b.description) LogicalName,                                                                  
                 TRIM(CASE                                                                                         
@@ -113,7 +113,7 @@
             a.stnd_cd_kor_dmn_nm                                                                                  
         )                                                                                                           
         SELECT                                                                                                      
-            a.roNo,                                                                                               
+            a.rowNo,                                                                                               
             a.PhysicalName columnPhysicalName,                                                                                         
             a.LogicalName columnLogicalName,                                                                                          
             a.DataTypes dataType,                                                                                             
@@ -125,7 +125,7 @@
             FROM tableLayout a                                                                                      
             LEFT JOIN codeValue b                                                                                   
             ON a.LogicalName = b.stnd_cd_dmn_nm                                                                     
-        ORDER BY a.roNo;       
+        ORDER BY a.rowNo;       
     </select>
 
     <update id="renameColumn">

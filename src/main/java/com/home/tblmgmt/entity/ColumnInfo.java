@@ -6,6 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ColumnInfo {
+    private int rowNo;
     private String columnPhysicalName;
     private String columnLogicalName;
     private String dataType;

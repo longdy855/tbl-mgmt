@@ -49,6 +49,7 @@
 
             <div id="tblDetail"></div>
             <input type="button" id="btnSave" value="Save"/>
+            <input type="button" id="btnDownloadExcel" value="Download Excel"/>
 
 
         </section>
@@ -174,6 +175,48 @@
 
             $('#btnSave').click(function() {
                 console.log(matrixToJson(hot.getData()));
+            });
+
+            function downloadExcel(tableName) {
+                $.ajax({
+                    url: baseUrl + `/download/table-details/${tableName}`,
+                    method: 'GET',
+                    xhrFields: {
+                        responseType: 'blob' // Specify the response type as 'blob' to handle binary data
+                    },
+                    success: function (data, status, xhr) {
+                        // Extract filename from content-disposition header
+                        const disposition = xhr.getResponseHeader('Content-Disposition');
+                        let filename = 'download.xlsx'; // Default filename
+
+                        if (disposition && disposition.indexOf('attachment') !== -1) {
+                            const match = disposition.match(/filename="?([^"]+)"?/);
+                            if (match && match[1]) {
+                                filename = match[1];
+                            }
+                        }
+
+                        // Create a download link and simulate a click
+                        const link = document.createElement('a');
+                        const url = window.URL.createObjectURL(data);
+                        link.href = url;
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error downloading file:', error);
+                        alert('Failed to download the file. Please try again.');
+                    }
+                });
+            }
+
+
+            $('#btnDownloadExcel').click(function() {
+                const tableName = $("#h3TableName").text(); // Replace with your dynamic table name
+                downloadExcel(tableName);
             });
         });
     </script>
