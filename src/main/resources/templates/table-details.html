@@ -14,6 +14,8 @@
     <script th:src="@{/js/insert-script.js}"></script>
     <script th:src="@{/js/select-script.js}"></script>
     <script th:src="@{/js/update-script.js}"></script>
+    <script th:src="@{/js/generate-service.js}"></script>
+    <script th:src="@{/js/generate-mapper-impl.js}"></script>
 
     <link th:href="@{/css/handsontable.full.min.css}" rel="stylesheet" />
 
@@ -263,6 +265,16 @@
             
             $('#btnMakeUpdate').click(function() {
                 handleGenerateUpdateScript(hot);
+            });
+
+            
+            $('#btnMakeServiceImpl').click(function() {
+                handleGenerateServiceImpl($('#h3LogicalName').text());
+            });
+
+            
+            $('#btnMakeMapperImpl').click(function() {
+                handleGenerateMapperImpl($('#h3LogicalName').text());
             });
         });
     </script>
