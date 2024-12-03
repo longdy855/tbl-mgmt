@@ -9,6 +9,12 @@
     <script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
     
     <script th:src="@{/jquery/handsontable.full.min.js}"></script>
+
+    <script th:src="@{/js/common-sql-generate.js}"></script>
+    <script th:src="@{/js/insert-script.js}"></script>
+    <script th:src="@{/js/select-script.js}"></script>
+    <script th:src="@{/js/update-script.js}"></script>
+
     <link th:href="@{/css/handsontable.full.min.css}" rel="stylesheet" />
 
 
@@ -23,7 +29,7 @@
         <section class="navigation">
             <a th:href="@{/}">◀ Table List</a>
             <h3 id="h3TableName" th:text="${tableName}">Table Name</h3>
-            <h3 th:text="${logicalName}">Logical Name</h3>
+            <h3 id="h3LogicalName"th:text="${logicalName}">Logical Name</h3>
             <!-- <input type="button" id="myButton" value="Add Column"/><br> -->
 
             <!-- <table class="table-list">
@@ -49,6 +55,11 @@
             <div id="tblDetail" style="width: 1000px;"></div>
             <input type="button" id="btnSave" value="Save"/>
             <input type="button" id="btnDownloadExcel" value="Download Excel"/>
+            <input type="button" id="btnMakeInsert" value="Make Insert"/>
+            <input type="button" id="btnMakeSelect" value="Make Select"/>
+            <input type="button" id="btnMakeUpdate" value="Make Update"/>
+            <input type="button" id="btnMakeServiceImpl" value="Make Service Impl"/>
+            <input type="button" id="btnMakeMapperImpl" value="Make Mapper Impl"/>
 
 
         </section>
@@ -238,6 +249,20 @@
             $('#btnDownloadExcel').click(function() {
                 const tableName = $("#h3TableName").text(); // Replace with your dynamic table name
                 downloadExcel(tableName);
+            });
+
+            $('#btnMakeInsert').click(function() {
+                handleGenerateScript(hot);
+            });
+            
+            
+            $('#btnMakeSelect').click(function() {
+                handleGenerateSelectScript(hot);
+            });
+
+            
+            $('#btnMakeUpdate').click(function() {
+                handleGenerateUpdateScript(hot);
             });
         });
     </script>
