@@ -6,7 +6,7 @@ A screen to display all tables within a specific schema.
 A screen to view detailed information about a specific table. It also allows for the generation of MyBatis scripts and Excel file downloads.
 
 ## Next steps
-### 1. Add an alter column function in Table Detail Screen
+### 1. Add an alter column function
 The app should be table to 
 1. Remove a column
 1. Change column name
