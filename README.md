@@ -17,7 +17,7 @@ The app should be table to
 6. Add new columns to any sepcific order
 7. Add a function to store changed history
 
-:memo: **<em>Each task involves creating a backup table script, exporting data to an Excel file, generating a new script, and storing it as an SQL file.</em>**
+:memo: **Note: <em>Each task involves creating a backup table script, exporting data to an Excel file, generating a new script, and storing it as an SQL file.</em>**
 
 ### 2. Separate DB and Schema for each project
 To manage our company's numerous databases and schemas across various projects, we need a function to select the specific database and schema to be used for each task.
