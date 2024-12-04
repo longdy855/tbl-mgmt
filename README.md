@@ -11,7 +11,7 @@ DBA can remove a column from the table.
 The app should 
 1. Backup old DDL script
 2. Backup data to an excel file
-3. Alter the column
+3. Alter to remove the column
 ### 2. Add an alter column function in Table Detail Screen
 The app should be table to change column name, description, datatype and primary key.
 ### 3. Store table info
