@@ -19,8 +19,12 @@ The app should be table to
 
 :memo: **<em> Note: Each task, require back up table script, back up data, make new script and store as sql files.<em>**
 
-### 2. Store table info
+### 2. Separate DB by project
+To manage our company's numerous databases and schemas across various projects, we need a function to select the specific database and schema to be used for each task.
+### 3. Store table info
 Table info such as Table Physical Name, Table Logical Name, Column Physical Name, Column Logical Name, Data Type, Word, Term, Description to explain each item.
 Store code and description of a column.
-### 3. Generate all tables to an excel
-### 4. Integrate with Portal system
+### 4. Generate all tables to an excel
+At the end of the project, we need to provide table info to the customer. With this function it will help us to make the document accurately and fast.
+### 5. Integrate with Portal system
+In portal, we have security and user management functions. We can utilize those functions.
