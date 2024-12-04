@@ -7,15 +7,17 @@ A screen to view detailed information about a specific table. It also allows for
 
 ## Next steps
 ### 1. Add an alter column function
+
 The app should be table to 
-1. Remove a column
-1. Change column name
-2. Change Logical column name
-3. Change Datatype
-4. Change Primary key
-5. Add new cloumns at the bottom of the table
-6. Add new columns to any sepcific order
-7. Add a function to store changed history
+
+1.1. Remove a column <br/>
+1.2. Change column name <br/>
+1.3. Change Logical column name <br/>
+1.4. Change Datatype <br/>
+1.5. Change Primary key <br/>
+1.6. Add new cloumns at the bottom of the table <br/>
+1.7. Add new columns to any sepcific order <br/>
+1.8. Add a function to store changed history <br/>
 
 :memo: **Note: <em>Each task involves creating a backup table script, exporting data to an Excel file, generating a new script, and storing it as an SQL file.</em>**
 
