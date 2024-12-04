@@ -16,5 +16,6 @@ The app should
 The app should be table to change column name, description, datatype and primary key.
 ### 3. Store table info
 Table info such as Table Physical Name, Table Logical Name, Column Physical Name, Column Logical Name, Data Type, Word, Term, Description to explain each item.
+Store code and description of a column.
 ### 4. Generate all tables to an excel
 ### 5. Integrate with Portal system
