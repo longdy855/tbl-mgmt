@@ -19,7 +19,7 @@ The app should be table to
 
 :memo: **<em> Note: Each task, require back up table script, back up data, make new script and store as sql files.<em>**
 
-### 2. Separate DB by project
+### 2. Separate DB and Schema for each project
 To manage our company's numerous databases and schemas across various projects, we need a function to select the specific database and schema to be used for each task.
 ### 3. Store table info
 Table info such as Table Physical Name, Table Logical Name, Column Physical Name, Column Logical Name, Data Type, Word, Term, Description to explain each item.
