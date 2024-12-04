@@ -10,14 +10,14 @@ A screen to view detailed information about a specific table. It also allows for
 
 The app should be table to 
 
-1.1. Remove a column <br/>
-1.2. Change column name <br/>
-1.3. Change Logical column name <br/>
-1.4. Change Datatype <br/>
-1.5. Change Primary key <br/>
-1.6. Add new cloumns at the bottom of the table <br/>
-1.7. Add new columns to any sepcific order <br/>
-1.8. Add a function to store changed history <br/>
+1.1. <em>Column Removal:</em> Remove an existing column from the table.<br/>
+1.2. <em>Column Renaming:</em> Change the name of an existing column.<br/>
+1.3. <em>Logical Column Name Change:</em> Modify the display name of a column without affecting its underlying data.<br/>
+1.4. <em>Data Type Modification:</em> Alter the data type of an existing column.<br/>
+1.5. <em>Primary Key Alteration:</em> Change the primary key constraint of the table.<br/>
+1.6. <em>Column Addition (Bottom):</em> Add new columns to the end of the table.<br/>
+1.7. <em>Column Addition (Specific Order):</em> Insert new columns at a specific position within the table.<br/>
+1.8. <em>Change History Tracking:</em> Implement a function to record and store information about table modifications.<br/>
 
 :memo: **Note: <em>Each task involves creating a backup table script, exporting data to an Excel file, generating a new script, and storing it as an SQL file.</em>**
 
