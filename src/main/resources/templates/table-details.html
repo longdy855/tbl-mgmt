@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <script th:src="@{/jquery/jquery-3.7.1.min.js}"></script>
-    
+
     <script th:src="@{/jquery/handsontable.full.min.js}"></script>
 
     <script th:src="@{/js/common-sql-generate.js}"></script>
@@ -21,6 +22,7 @@
 
 
 </head>
+
 <body>
     <header class="header">
         <h1>Database Table Manager</h1>
@@ -31,7 +33,7 @@
         <section class="navigation">
             <a th:href="@{/}">◀ Table List</a>
             <h3 id="h3TableName" th:text="${tableName}">Table Name</h3>
-            <h3 id="h3LogicalName"th:text="${logicalName}">Logical Name</h3>
+            <h3 id="h3LogicalName" th:text="${logicalName}">Logical Name</h3>
             <!-- <input type="button" id="myButton" value="Add Column"/><br> -->
 
             <!-- <table class="table-list">
@@ -55,13 +57,13 @@
                 </tbody>
             </table> -->
             <div id="tblDetail" style="width: 1000px;"></div>
-            <input type="button" id="btnSave" value="Save"/>
-            <input type="button" id="btnDownloadExcel" value="Download Excel"/>
-            <input type="button" id="btnMakeInsert" value="Make Insert"/>
-            <input type="button" id="btnMakeSelect" value="Make Select"/>
-            <input type="button" id="btnMakeUpdate" value="Make Update"/>
-            <input type="button" id="btnMakeServiceImpl" value="Make Service Impl"/>
-            <input type="button" id="btnMakeMapperImpl" value="Make Mapper Impl"/>
+            <input type="button" id="btnSave" value="Save" />
+            <input type="button" id="btnDownloadExcel" value="Download Excel" />
+            <input type="button" id="btnMakeInsert" value="Make Insert" />
+            <input type="button" id="btnMakeSelect" value="Make Select" />
+            <input type="button" id="btnMakeUpdate" value="Make Update" />
+            <input type="button" id="btnMakeServiceImpl" value="Make Service Impl" />
+            <input type="button" id="btnMakeMapperImpl" value="Make Mapper Impl" />
 
 
         </section>
@@ -72,23 +74,24 @@
     </footer>
     <script>
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             let baseUrl = "/api/v1";
 
             function matrixToJson(matrix) {
                 const jsonData = [];
                 matrix.forEach(row => {
-                    
-                    if(row[0]){
+
+                    if (row[0]) {
                         jsonData.push({
                             columnPhysicalName: row[0],
                             columnLogicalName: row[1],
-                            dataType:row[2],
-                            primaryKey:row[3]
+                            dataType: row[2],
+                            primaryKey: row[3],
+                            action: row[34]
                         });
                     }
 
-                    
+
                 });
                 return jsonData;
             }
@@ -108,20 +111,30 @@
                 td.innerHTML = '<input type="checkbox" ' + (value ? 'checked' : '') + ' />';
             }
 
+            function checkboxRendererAction(instance, td, row, col, prop, value, cellProperties) {
+                Handsontable.renderers.TextRenderer.apply(this, arguments);
+                td.innerHTML = '<input type="checkbox" ' + (value ? 'checked' : '') + ' />';
+            }
+
 
             const container = document.querySelector('#tblDetail');
 
             const hot = new Handsontable(container, {
-                colHeaders: ['Physical Name', 'Logical Name', 'Data Type', 'Primary Key', 'Code Description'],
+                colHeaders: ['Physical Name', 'Logical Name', 'Data Type', 'Primary Key', 'Code Description', 'Action'],
                 // readOnly: true,
                 data: [],
 
                 columns: [
-                    {data: "columnPhysicalName"},
-                    {data: "columnLogicalName"},
-                    {data: "dataType"},
-                    {data: "primaryKey", type: 'checkbox', renderer: checkboxRenderer },
-                    {data: "codeDesc" }
+                    { data: "columnPhysicalName" },
+                    { data: "columnLogicalName" },
+                    { data: "dataType" },
+                    { data: "primaryKey", type: 'checkbox', renderer: checkboxRenderer },
+                    { data: "codeDesc" },
+                    {
+                        data: "action",
+                        type: 'checkbox',
+                        renderer: checkboxRendererAction
+                    },
                 ],
                 height: 500,
                 width: 800,
@@ -134,20 +147,20 @@
                 licenseKey: 'non-commercial-and-evaluation', // for non-commercial use only
 
                 //Mark Change
-                afterChange: function(changes, source) {
+                afterChange: function (changes, source) {
                     if (source !== 'loadData') {
-                    const instance = this;
-                    
-                    // Mark changed cells in light yellow
-                    if (changes) {
-                        changes.forEach(([row, prop, oldValue, newValue]) => {
-                        if (oldValue !== newValue) {
-                            instance.setCellMeta(row, instance.propToCol(prop), 'className', 'cell-changed');
+                        const instance = this;
+
+                        // Mark changed cells in light yellow
+                        if (changes) {
+                            changes.forEach(([row, prop, oldValue, newValue]) => {
+                                if (oldValue !== newValue) {
+                                    instance.setCellMeta(row, instance.propToCol(prop), 'className', 'cell-changed');
+                                }
+                            });
                         }
-                        });
                     }
-                    }
-                }
+                },
                 // ,
                 // afterCreateRow: function(index, amount) {
                 //     // Mark newly added rows in light green
@@ -157,40 +170,71 @@
                 // },
                 // cells: function(row, col) {
                 //     const cellProperties = {};
-                    
+
                 //     // Apply custom cell styling
                 //     if (this.instance.getDataAtRowProp(row, 'isNewRow')) {
                 //     cellProperties.className = 'row-added';
                 //     }
-                    
+
                 //     return cellProperties;
                 // }
             });
-
-
-
             $.ajax({
-                url: baseUrl + '/table-detail/' +  $('#h3TableName').text(),
+                url: baseUrl + '/table-detail/' + $('#h3TableName').text(),
                 dataType: 'json',
                 type: 'GET',
                 success: function (res) {
-                    
-                    if(res.length == 0){
+
+                    if (res.length == 0) {
                         alert('No data found');
                         return;
                     }
-                    // let matrixList = jsonToMatrix(res);
+                    let data = retrieveLoadData(res);
                     hot.loadData(res);
-                    // hot.loadData(matrixList);
                 }
             });
 
-            function sendDataToServer(jsonData) {
-                // Example list of JSON objects
-                
+            const outputRowDataSelected = []; // Define at a higher scope
+            function onRowSelect(row) {
+                console.log(`Performing action on row ${row}`);
+                const rowData = hot.getDataAtRow(row);
+                console.log('Selected Row Data:', rowData);
+                let body = {
+                    columnPhysicalName: rowData[0],
+                    columnLogicalName: rowData[1],
+                    dataType: rowData[2],
+                    primaryKey: rowData[3],
+                    action: true
+                };
+                outputRowDataSelected.push(body); // Store row data
+                console.log('Current JSON Data:', outputRowDataSelected);
+            }
 
+            hot.addHook('afterSelectionEnd', (row, column, row2, column2) => {
+                onRowSelect(row);
+            });
+
+            function retrieveLoadData(matrix) {
+                const jsonData = [];
+                matrix.forEach(row => {
+                    if (row) {
+                        jsonData.push({
+                            columnPhysicalName: row.columnPhysicalName,
+                            columnLogicalName: row.columnLogicalName,
+                            dataType: row.dataType,
+                            primaryKey: row.primaryKey,
+                            action: true
+                        });
+                    }
+                });
+                return jsonData;
+            }
+
+            function sendDataToServer(jsonData) {
+                const tableName = $("#h3TableName").text();
+                // Example list of JSON objects
                 $.ajax({
-                    url: baseUrl + '/table-detail', // Replace with your REST endpoint
+                    url: baseUrl + '/table-detail-remove?tableName='+tableName, // Replace with your REST endpoint
                     method: 'POST',
                     contentType: 'application/json', // Inform server of JSON content
                     data: JSON.stringify(jsonData), // Convert JavaScript object to JSON string
@@ -205,10 +249,11 @@
                 });
             }
 
-            $('#btnSave').click(function() {
-                let jsonData = matrixToJson(hot.getData());
-                console.log(jsonData);
-                sendDataToServer(jsonData);
+            $('#btnSave').click(function () {
+                let pramData = outputRowDataSelected;
+                //let jsonData = matrixToJson(hot.getData());
+                console.log(outputRowDataSelected);
+                sendDataToServer(pramData);
             });
 
             function downloadExcel(tableName) {
@@ -248,37 +293,38 @@
             }
 
 
-            $('#btnDownloadExcel').click(function() {
+            $('#btnDownloadExcel').click(function () {
                 const tableName = $("#h3TableName").text(); // Replace with your dynamic table name
                 downloadExcel(tableName);
             });
 
-            $('#btnMakeInsert').click(function() {
+            $('#btnMakeInsert').click(function () {
                 handleGenerateScript(hot);
             });
-            
-            
-            $('#btnMakeSelect').click(function() {
+
+
+            $('#btnMakeSelect').click(function () {
                 handleGenerateSelectScript(hot);
             });
 
-            
-            $('#btnMakeUpdate').click(function() {
+
+            $('#btnMakeUpdate').click(function () {
                 handleGenerateUpdateScript(hot);
             });
 
-            
-            $('#btnMakeServiceImpl').click(function() {
+
+            $('#btnMakeServiceImpl').click(function () {
                 handleGenerateServiceImpl($('#h3LogicalName').text());
             });
 
-            
-            $('#btnMakeMapperImpl').click(function() {
+
+            $('#btnMakeMapperImpl').click(function () {
                 handleGenerateMapperImpl($('#h3LogicalName').text());
             });
         });
     </script>
 </body>
+
 </html>
 
 
