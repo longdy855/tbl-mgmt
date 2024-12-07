@@ -64,7 +64,7 @@ public class TableRestController {
                 tableService.removeColumn(tableName, columnPhysicalName);
                 //logger.info("Successfully removed column: " + columnPhysicalName);
             } catch (Exception e) {
-                //logger.severe("Error removing column " + columnPhysicalName + ": " + e.getMessage());
+                //logger.severe("Error removing column " + columnPhysicalName + ": " + e.getMessage());///
                 return ResponseEntity.status(500).body("Error removing column: " + columnPhysicalName);
             }
         }
