@@ -129,14 +129,14 @@
     </select>
 
     <update id="renameColumn">
-        ALTER TABLE #{schema}.#{table} RENAME COLUMN #{oldName} TO #{newName};
+        ALTER TABLE ${table} RENAME COLUMN #{oldName} TO #{newName};
     </update>
 
     <update id="removeColumn">
-        ALTER TABLE #{schema}.#{table} DROP COLUMN #{column};
+        ALTER TABLE ${table} DROP COLUMN ${column};
     </update>
 
     <update id="modifyColumnDataType">
-        ALTER TABLE #{schema}.#{table} ALTER COLUMN #{column} TYPE #{dataType};
+        ALTER TABLE ${table} ALTER COLUMN #{column} TYPE #{dataType};
     </update>
 </mapper>
